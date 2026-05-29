@@ -12,16 +12,25 @@ in the open.
 
 ## Layout
 
-Each `*.mdx` file at the repository root is one docs page, mounted at
-`/docs/<filename>`:
+Docs are organized into one folder per language (fumadocs `parser: "dir"`), so
+adding a new language is just adding a folder:
 
-| File | Page |
-| --- | --- |
-| `index.mdx` | `/docs` |
-| `quickstart.mdx` | `/docs/quickstart` |
-| `rulepack-json.mdx` | `/docs/rulepack-json` |
-| `cli.mdx` | `/docs/cli` |
-| `publishing.mdx` | `/docs/publishing` |
+```text
+en/                     # English (default language)
+  index.mdx             # → /docs
+  quickstart.mdx        # → /docs/quickstart
+  rulepack-json.mdx     # → /docs/rulepack-json
+  cli.mdx               # → /docs/cli
+  publishing.mdx        # → /docs/publishing
+ja/                     # 日本語 — same filenames as en/
+  index.mdx
+  …
+```
+
+The site shows the folder matching the visitor's language; anything missing in a
+language falls back to `en/`. To add a language, create a new folder (e.g.
+`fr/`) with the same filenames and translate — then wire the locale into the web
+app's `lib/i18n.ts`.
 
 Pages use [fumadocs](https://fumadocs.dev) frontmatter:
 
@@ -36,8 +45,9 @@ A `<Callout>` component is available in MDX (no import needed).
 
 ## Contributing
 
-1. Edit or add an `.mdx` file at the repo root. Keep one topic per file and
-   match the existing frontmatter.
+1. Edit the matching file under the language folder (`en/…`, `ja/…`). Keep one
+   topic per file and match the existing frontmatter. Translations should mirror
+   the English filenames so they line up.
 2. Open a pull request. Substantive wording / structure discussion belongs in
    issues so it stays public.
 3. Be precise about behaviour — if something isn't shipped yet, say so. The
@@ -45,7 +55,6 @@ A `<Callout>` component is available in MDX (no import needed).
 
 ## How the site consumes this repo
 
-The rulepack web app pins this repository as a **git submodule** at
-`apps/rulepack-web/content/docs`, and its production Docker build also falls
-back to cloning this repo's default branch when the submodule isn't present —
-so the published site always has the latest docs without any extra wiring.
+The rulepack web app clones this repository into `apps/rulepack-web/content/docs`
+at dev/build time (its production Docker build clones it directly), so the
+published site always has the latest docs without any extra wiring.
