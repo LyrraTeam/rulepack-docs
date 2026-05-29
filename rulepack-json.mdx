@@ -1,0 +1,135 @@
+---
+title: rulepack.json
+description: The manifest — every field, with the root-placement convention.
+---
+
+`rulepack.json` is the manifest for a pack. It declares identity, the agent
+files to ship, and — on the consumer side — the packs a project depends on. It
+lives at the project root, like `package.json`.
+
+<Callout title="Where it lives">
+Always at the repository root: `/rulepack.json`. The CLI resolves it from the
+current working directory, so a root manifest is what every command expects —
+and it reads like the manifest of any other ecosystem.
+</Callout>
+
+## Coming from package.json
+
+If you've ever written a `package.json`, you already know `rulepack.json`. Same
+shape — only the payload differs. `package.json` ships code; `rulepack.json`
+ships the AI agent rule files that code lives next to.
+
+| `package.json` | `rulepack.json` |
+| --- | --- |
+| ships JavaScript / TS code | ships AI agent rule files |
+| `name`, `version` | `name`, `version` *(identical meaning)* |
+| `dependencies` | `dependencies` *(other rule packs)* |
+| `files` to include | `files` to include |
+| `main` / `exports` entry | `agents` map: which file each agent reads |
+
+## Don't write JSON? Let your agent write it
+
+`rulepack.json` is new enough that it isn't in most models' training data yet —
+but every coding agent knows `package.json` cold. Lean on that: paste this into
+Claude Code, Cursor, or any agent and it'll scaffold the manifest for your repo.
+
+```text title="Paste into your agent"
+Set up rulepack.json for this project.
+
+rulepack.json is like package.json, but instead of shipping code it bundles
+this repo's AI coding-agent rule files (CLAUDE.md, .cursor/rules, AGENTS.md,
+.clinerules, .windsurfrules) into one reusable, versioned pack.
+
+Please:
+1. Scan the repo and list every agent rule file that already exists.
+2. Create rulepack.json at the project root with:
+   - "name": "@<my-scope>/<short-pack-name>"  (ask me for my scope)
+   - "version": "0.1.0"
+   - "description": one line on what these rules enforce
+   - "agents": a map from each agent to its rule file(s) — only include
+     agents whose files actually exist. Keys: claude, cursor, cline,
+     windsurf, agents_md.
+3. Show me the file and explain each field in plain language.
+
+Reference: https://rulepack.lyrra.net/rulepack.json
+```
+
+<Callout title="Point an agent straight at the spec">
+There's also a machine-readable primer at [`/llms.txt`](/llms.txt) — tell your
+agent to read `https://rulepack.lyrra.net/llms.txt` and it learns the format
+(and the `package.json` analogy) directly, no copy-paste required.
+</Callout>
+
+## Example
+
+```json title="rulepack.json"
+{
+  "name": "@ichi/nextjs-strict",
+  "version": "1.4.0",
+  "description": "Strict Next.js rules for Claude Code + Cursor",
+  "license": "MIT",
+  "keywords": ["nextjs", "typescript", "strict"],
+  "agents": {
+    "claude": ["./CLAUDE.md"],
+    "cursor": ["./.cursor/rules/main.mdc"],
+    "agents_md": ["./AGENTS.md"]
+  },
+  "files": ["rulepack.json", "CLAUDE.md", ".cursor/rules/**", "AGENTS.md"],
+  "dependencies": {
+    "@rulepack/base": "^2.0.0"
+  }
+}
+```
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `name` \* | `string` | `@scope/name`. Lowercase letters, digits, internal hyphens. The scope must be one you own. |
+| `version` \* | `string` | Semver. Each published version is immutable — bump it for every release. |
+| `description` | `string` | One line, ≤ 280 chars. Shown in search and on the pack page. |
+| `license` | `string` | SPDX identifier (`MIT`, `Apache-2.0`) or `UNLICENSED`. |
+| `keywords` | `string[]` | Up to 20 tags for discovery. |
+| `agents` \* | `object` | Maps each target agent to the rule files it reads. At least one agent with one path is required. |
+| `files` | `string[]` | Glob patterns for the published tarball. `rulepack.json` and every declared agent path are always included. |
+| `dependencies` | `object` | Consumer-side. `@scope/name` → semver range. Written by `rulepack add` when a `rulepack.json` exists. |
+
+<small>\* required.</small>
+
+## The agents map
+
+Each key is an agent identifier; each value lists the rule files that agent
+should receive. The supported agents today:
+
+| Key | Agent | Default path |
+| --- | --- | --- |
+| `claude` | Claude Code | `./CLAUDE.md` |
+| `cursor` | Cursor | `./.cursor/rules/main.mdc` |
+| `agents_md` | AGENTS.md | `./AGENTS.md` |
+| `cline` | Cline | `./.clinerules` |
+| `windsurf` | Windsurf | `./.windsurfrules` |
+
+## Author vs consumer
+
+The same file format serves two roles. An **author** manifest (in the pack's
+source repo) requires `name`, `version`, and at least one `agents` entry. A
+**consumer** manifest (in a project that installs packs) only needs
+`dependencies` — `rulepack add` maintains it for you.
+
+When you run `rulepack add @scope/pack` in a project that already has a
+`rulepack.json`, the installed pack is recorded under `dependencies` with a
+caret range, just like npm:
+
+```json title="rulepack.json"
+{
+  "dependencies": {
+    "@ichi/nextjs-strict": "^1.4.0"
+  }
+}
+```
+
+<Callout title="Versioning & provenance">
+Published versions are immutable and content-addressed by SHA-256. Provenance
+(publisher, timestamp) is attested by the registry, not written by the author —
+see the design RFC for the full trust model.
+</Callout>

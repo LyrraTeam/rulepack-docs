@@ -1,0 +1,51 @@
+---
+title: Overview
+description: What rulepack is and how the pieces fit together.
+---
+
+rulepack is a registry and CLI for AI coding-agent rule files. You write your
+rules once, describe them in a single `rulepack.json` at your project root, and
+ship them to every agent — Claude Code, Cursor, Cline, Windsurf, AGENTS.md.
+
+Think of it as npm for agent instructions. A **pack** bundles the rule files an
+agent reads (like `CLAUDE.md` or `.cursor/rules/main.mdc`), is versioned with
+immutable semver, and installs into any project with one command.
+
+## The shape of a project
+
+`rulepack.json` lives at the root of your repository, right next to
+`package.json` — the same place every other ecosystem keeps its manifest.
+That's deliberate: it should feel instantly familiar.
+
+```text title="your-project/"
+.
+├── rulepack.json          # the manifest — at the root
+├── package.json
+├── AGENTS.md
+├── CLAUDE.md
+└── .cursor/
+    └── rules/
+        └── main.mdc
+```
+
+<Callout title="Root placement is the convention">
+Keep `rulepack.json` at the project root. Tooling resolves it from the current
+working directory the same way npm finds `package.json`, so a root manifest is
+what `rulepack publish` and `rulepack add` expect.
+</Callout>
+
+## Install in seconds
+
+```bash title="terminal"
+npx rulepack add nextjs-strict
+```
+
+That resolves the pack from the registry, verifies its SHA-256, and writes the
+agent files into your project — recording the result in your `rulepack.json`.
+
+## Next steps
+
+- [Quickstart](/docs/quickstart) — publish your first pack in five minutes.
+- [rulepack.json](/docs/rulepack-json) — every field in the manifest, explained.
+- [CLI commands](/docs/cli) — `init`, `add`, `publish`, `login`, `search`.
+- [Publishing & installing](/docs/publishing) — the author → registry → consumer lifecycle.

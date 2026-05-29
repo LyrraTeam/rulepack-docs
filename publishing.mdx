@@ -1,0 +1,58 @@
+---
+title: Publishing & installing
+description: The author → registry → consumer lifecycle.
+---
+
+The full lifecycle of a pack: author it, publish it to the registry, and install
+it into any consumer project.
+
+## Authoring
+
+A pack's source repo holds the agent rule files and a root `rulepack.json`. The
+`agents` map decides which files ship; `files` globs decide what else rides
+along (a README, shared snippets).
+
+You can author entirely from the CLI (`rulepack init`) or from the web editor —
+no local checkout required for the latter.
+
+## Publishing
+
+`rulepack publish` packs the declared files into a tarball, validates the
+manifest against the schema, computes a SHA-256, and uploads. The scope in
+`name` must be one you own.
+
+```bash title="terminal"
+$ rulepack publish
+✓ Packed 4 files (12.3 KiB)
+✓ Published @ichi/nextjs-strict@1.4.0
+→ npx rulepack add @ichi/nextjs-strict
+```
+
+<Callout title="Immutable versions">
+Once published, a version can't be overwritten. Re-publishing the same semver
+returns a 409 — bump `version` for every change. This guarantees a given
+`@scope/name@version` always resolves to identical bytes.
+</Callout>
+
+## Installing
+
+`rulepack add` resolves the latest version (or a requested one), downloads the
+tarball, verifies its SHA-256 against the registry header, and writes the agent
+files into the consumer project.
+
+```bash title="terminal"
+$ rulepack add @ichi/nextjs-strict
+✓ Resolved @ichi/nextjs-strict@1.4.0
+✓ Wrote CLAUDE.md · .cursor/rules/main.mdc
+✓ Recorded in rulepack.json
+```
+
+If the consumer project has a `rulepack.json`, the pack is recorded under
+`dependencies` with a caret range. Existing files prompt before overwrite (skip
+with `--force`).
+
+## Integrity
+
+Every tarball is content-addressed by SHA-256. The CLI verifies the downloaded
+bytes against the `X-Pack-Shasum` header on install and aborts on mismatch, so a
+corrupted or tampered download never reaches your project.

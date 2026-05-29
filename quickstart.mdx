@@ -1,0 +1,64 @@
+---
+title: Quickstart
+description: From zero to a published pack in a few commands.
+---
+
+You'll need Node ≥ 22 and a GitHub account.
+
+## 1. Claim a scope
+
+Packs live under `@scope/name`. Sign in with GitHub and claim your scope on the
+hub — one scope per account, renameable later.
+
+```bash title="terminal"
+npx rulepack login
+```
+
+This opens your browser, you approve the session, and the CLI stores a token at
+`~/.rulepackrc`.
+
+## 2. Scaffold a pack
+
+Run `init` in the project whose rules you want to share. It discovers existing
+agent files, asks which agents the pack targets, and writes a `rulepack.json` at
+the root.
+
+```bash title="terminal"
+npx rulepack init
+```
+
+```json title="rulepack.json"
+{
+  "name": "@ichi/nextjs-strict",
+  "version": "0.1.0",
+  "license": "MIT",
+  "agents": {
+    "claude": ["./CLAUDE.md"],
+    "cursor": ["./.cursor/rules/main.mdc"]
+  },
+  "files": ["rulepack.json", "CLAUDE.md", ".cursor/rules/**"]
+}
+```
+
+## 3. Publish
+
+Publishing packs the declared files into a tarball, validates the manifest, and
+uploads it. Versions are immutable — bump `version` for every release.
+
+```bash title="terminal"
+npx rulepack publish
+```
+
+## 4. Install anywhere
+
+```bash title="terminal"
+npx rulepack add @ichi/nextjs-strict
+```
+
+The agent files land in the consumer project and the dependency is recorded in
+that project's `rulepack.json`.
+
+<Callout title="No CLI? Use the Hub">
+You can create, edit, and publish a pack entirely from the web editor — no local
+CLI required. Head to `/packs/new` after signing in.
+</Callout>

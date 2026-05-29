@@ -1,0 +1,71 @@
+---
+title: CLI commands
+description: init, add, publish, login, search, whoami, logout.
+---
+
+The `rulepack` CLI runs with no install via `npx rulepack <command>`, or install
+it globally. It speaks both English and 日本語 — it picks your locale on first
+run.
+
+## add
+
+Install a pack into the current project. Downloads, verifies the SHA-256, and
+writes the agent files.
+
+```bash title="terminal"
+rulepack add @ichi/nextjs-strict
+rulepack add nextjs-strict          # house packs install by bare name
+rulepack add @ichi/pack --force     # overwrite existing files without prompting
+```
+
+## init
+
+Scaffold a `rulepack.json` in the current directory. Discovers existing agent
+files and asks which agents to target.
+
+```bash title="terminal"
+rulepack init
+```
+
+## publish
+
+Pack the declared files and publish to the registry. Requires login and a
+claimed scope. Versions are immutable.
+
+```bash title="terminal"
+rulepack publish
+```
+
+## login
+
+Authenticate with the registry. Opens a browser to approve the CLI session; the
+token is stored at `~/.rulepackrc` (chmod 0600). For CI, set `RULEPACK_TOKEN`
+instead.
+
+```bash title="terminal"
+rulepack login
+```
+
+## search
+
+Search packs on the registry by name, scope, or keyword.
+
+```bash title="terminal"
+rulepack search nextjs
+```
+
+## whoami
+
+Show the currently logged-in user and the active registry.
+
+```bash title="terminal"
+rulepack whoami
+```
+
+## logout
+
+Remove the locally stored credentials.
+
+```bash title="terminal"
+rulepack logout
+```
