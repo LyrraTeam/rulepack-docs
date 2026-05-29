@@ -1,0 +1,69 @@
+---
+title: CLI コマンド
+description: init・add・publish・login・search・whoami・logout。
+---
+
+`rulepack` CLI は `npx rulepack <command>` でインストール不要で実行でき、グローバル
+インストールも可能です。英語と日本語に対応し、初回実行時にロケールを判定します。
+
+## add
+
+パックを現在のプロジェクトにインストールします。ダウンロードして SHA-256 を検証し、
+エージェントファイルを書き込みます。
+
+```bash title="terminal"
+rulepack add @ichi/nextjs-strict
+rulepack add nextjs-strict          # house パックは scope 無しの名前でインストール
+rulepack add @ichi/pack --force     # 既存ファイルを確認なしで上書き
+```
+
+## init
+
+カレントディレクトリに `rulepack.json` を雛形生成します。既存のエージェントファイルを
+検出し、対象とするエージェントを尋ねます。
+
+```bash title="terminal"
+rulepack init
+```
+
+## publish
+
+宣言したファイルをまとめてレジストリに公開します。ログインと取得済みの scope が必要です。
+バージョンは不変です。
+
+```bash title="terminal"
+rulepack publish
+```
+
+## login
+
+レジストリで認証します。ブラウザを開いて CLI セッションを承認すると、トークンが
+`~/.rulepackrc`（chmod 0600）に保存されます。CI では代わりに `RULEPACK_TOKEN` を設定します。
+
+```bash title="terminal"
+rulepack login
+```
+
+## search
+
+レジストリのパックを名前・scope・キーワードで検索します。
+
+```bash title="terminal"
+rulepack search nextjs
+```
+
+## whoami
+
+現在ログイン中のユーザーと、有効なレジストリを表示します。
+
+```bash title="terminal"
+rulepack whoami
+```
+
+## logout
+
+ローカルに保存された認証情報を削除します。
+
+```bash title="terminal"
+rulepack logout
+```

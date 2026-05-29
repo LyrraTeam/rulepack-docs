@@ -1,0 +1,56 @@
+---
+title: 公開とインストール
+description: author → registry → consumer のライフサイクル。
+---
+
+パックの全ライフサイクル — 作成し、レジストリに公開し、任意の consumer プロジェクトに
+インストールするまで。
+
+## 作成（Authoring）
+
+パックのソースリポジトリは、エージェント用ルールファイルとルート直下の `rulepack.json` を
+保持します。`agents` マップが配布するファイルを決め、`files` グロブがそれ以外に
+同梱するもの（README や共有スニペット）を決めます。
+
+作成は CLI（`rulepack init`）からでも、Web エディタからでも行えます — 後者はローカルの
+チェックアウト不要です。
+
+## 公開（Publishing）
+
+`rulepack publish` は宣言したファイルを tarball にまとめ、マニフェストをスキーマに対して
+検証し、SHA-256 を計算してアップロードします。`name` の scope は自分が所有するもので
+なければなりません。
+
+```bash title="terminal"
+$ rulepack publish
+✓ Packed 4 files (12.3 KiB)
+✓ Published @ichi/nextjs-strict@1.4.0
+→ npx rulepack add @ichi/nextjs-strict
+```
+
+<Callout title="バージョンは不変">
+一度公開したバージョンは上書きできません。同じ semver を再公開すると 409 が返ります —
+変更ごとに `version` を上げてください。これにより、ある `@scope/name@version` は
+つねに同一のバイト列に解決されることが保証されます。
+</Callout>
+
+## インストール（Installing）
+
+`rulepack add` は最新版（または指定版）を解決し、tarball をダウンロードして、レジストリの
+ヘッダに対して SHA-256 を検証し、エージェントファイルを consumer プロジェクトに書き込みます。
+
+```bash title="terminal"
+$ rulepack add @ichi/nextjs-strict
+✓ Resolved @ichi/nextjs-strict@1.4.0
+✓ Wrote CLAUDE.md · .cursor/rules/main.mdc
+✓ Recorded in rulepack.json
+```
+
+consumer プロジェクトに `rulepack.json` があれば、パックは `dependencies` にキャレット
+範囲で記録されます。既存ファイルは上書き前に確認します（`--force` でスキップ）。
+
+## 完全性（Integrity）
+
+すべての tarball は SHA-256 でコンテンツアドレス化されています。CLI はインストール時に
+ダウンロードしたバイト列を `X-Pack-Shasum` ヘッダと照合し、不一致なら中断します。
+破損・改ざんされたダウンロードがプロジェクトに届くことはありません。

@@ -1,0 +1,134 @@
+---
+title: rulepack.json
+description: マニフェスト — 全フィールドと、ルート配置の規約。
+---
+
+`rulepack.json` はパックのマニフェストです。アイデンティティ、配布するエージェント
+ファイル、そして — consumer 側では — プロジェクトが依存するパックを宣言します。
+`package.json` と同じく、プロジェクト直下に置きます。
+
+<Callout title="置き場所">
+つねにリポジトリ直下：`/rulepack.json`。CLI はカレントディレクトリから解決するので、
+どのコマンドもルート直下のマニフェストを前提とします — 他のエコシステムのマニフェストと
+同じ感覚で読めます。
+</Callout>
+
+## package.json から来た人へ
+
+`package.json` を書いたことがあれば、`rulepack.json` はもう分かっています。形は同じ —
+中身が違うだけです。`package.json` はコードを、`rulepack.json` はそのコードの隣にある
+AI エージェント用ルールファイルを配布します。
+
+| `package.json` | `rulepack.json` |
+| --- | --- |
+| JavaScript / TS コードを配布 | AI エージェント用ルールファイルを配布 |
+| `name`・`version` | `name`・`version` *(意味は同一)* |
+| `dependencies` | `dependencies` *(他のルールパック)* |
+| 同梱する `files` | 同梱する `files` |
+| `main` / `exports` のエントリ | `agents` マップ：各エージェントが読むファイル |
+
+## JSON は書けない？ エージェントに書かせよう
+
+`rulepack.json` は新しく、まだほとんどのモデルの学習データに入っていません — でも
+どのコーディングエージェントも `package.json` は熟知しています。それに乗りましょう：
+これを Claude Code・Cursor などに貼り付ければ、あなたのリポジトリ用にマニフェストを
+組み立ててくれます。
+
+```text title="エージェントに貼り付け"
+このプロジェクトに rulepack.json をセットアップして。
+
+rulepack.json は package.json に似ているけど、コードの代わりに、このリポジトリの
+AI コーディングエージェント用ルールファイル（CLAUDE.md / .cursor/rules / AGENTS.md /
+.clinerules / .windsurfrules）を、再利用・バージョン管理できる 1 つのパックにまとめるもの。
+
+お願い:
+1. リポジトリを調べて、すでに存在するエージェント用ルールファイルを全部挙げて。
+2. プロジェクト直下に rulepack.json を作成して、次を含めて:
+   - "name": "@<私のscope>/<短いパック名>"（scope は私に聞いて）
+   - "version": "0.1.0"
+   - "description": これらのルールが何を強制するかを 1 行で
+   - "agents": 各エージェントとそのルールファイルの対応表。実際にファイルが
+     存在するエージェントだけ含めて。キー: claude, cursor, cline, windsurf, agents_md
+3. 作成したファイルを見せて、各フィールドをやさしい言葉で説明して。
+
+参考: https://rulepack.lyrra.net/rulepack.json
+```
+
+<Callout title="エージェントを仕様に直接向ける">
+機械可読の入門ドキュメントが [`/llms.txt`](/llms.txt) にあります — エージェントに
+`https://rulepack.lyrra.net/llms.txt` を読ませれば、フォーマット（と `package.json`
+との対比）を直接学べます。コピペ不要です。
+</Callout>
+
+## 例
+
+```json title="rulepack.json"
+{
+  "name": "@ichi/nextjs-strict",
+  "version": "1.4.0",
+  "description": "Strict Next.js rules for Claude Code + Cursor",
+  "license": "MIT",
+  "keywords": ["nextjs", "typescript", "strict"],
+  "agents": {
+    "claude": ["./CLAUDE.md"],
+    "cursor": ["./.cursor/rules/main.mdc"],
+    "agents_md": ["./AGENTS.md"]
+  },
+  "files": ["rulepack.json", "CLAUDE.md", ".cursor/rules/**", "AGENTS.md"],
+  "dependencies": {
+    "@rulepack/base": "^2.0.0"
+  }
+}
+```
+
+## フィールド
+
+| フィールド | 型 | 説明 |
+| --- | --- | --- |
+| `name` \* | `string` | `@scope/name`。小文字・数字・内部のハイフン。scope は自分が所有するもの。 |
+| `version` \* | `string` | Semver。公開済みの各バージョンは不変 — リリースごとに上げる。 |
+| `description` | `string` | 1 行、280 文字以内。検索結果とパックページに表示。 |
+| `license` | `string` | SPDX 識別子（`MIT`・`Apache-2.0`）または `UNLICENSED`。 |
+| `keywords` | `string[]` | 発見用のタグ、最大 20 個。 |
+| `agents` \* | `object` | 各対象エージェントと、それが読むルールファイルの対応。最低 1 エージェント・1 パス必須。 |
+| `files` | `string[]` | 公開 tarball のグロブパターン。`rulepack.json` と宣言済みの全エージェントパスは常に含まれる。 |
+| `dependencies` | `object` | consumer 側。`@scope/name` → semver 範囲。`rulepack.json` がある状態で `rulepack add` が記録。 |
+
+<small>\* 必須。</small>
+
+## agents マップ
+
+各キーはエージェント識別子で、各値はそのエージェントが受け取るルールファイルを並べます。
+現在対応しているエージェント：
+
+| キー | エージェント | 既定パス |
+| --- | --- | --- |
+| `claude` | Claude Code | `./CLAUDE.md` |
+| `cursor` | Cursor | `./.cursor/rules/main.mdc` |
+| `agents_md` | AGENTS.md | `./AGENTS.md` |
+| `cline` | Cline | `./.clinerules` |
+| `windsurf` | Windsurf | `./.windsurfrules` |
+
+## author と consumer
+
+同じファイル形式が 2 つの役割を担います。**author** マニフェスト（パックのソースリポ内）は
+`name`・`version`・最低 1 つの `agents` エントリが必須。**consumer** マニフェスト
+（パックをインストールするプロジェクト内）は `dependencies` だけでよく、それは
+`rulepack add` が維持します。
+
+すでに `rulepack.json` があるプロジェクトで `rulepack add @scope/pack` を実行すると、
+インストールされたパックは npm と同じくキャレット範囲で `dependencies` に記録されます：
+
+```json title="rulepack.json"
+{
+  "dependencies": {
+    "@ichi/nextjs-strict": "^1.4.0"
+  }
+}
+```
+
+<Callout title="バージョニングと来歴（provenance）">
+公開済みバージョンは不変で、SHA-256 でコンテンツアドレス化されます。来歴（公開者・
+タイムスタンプ）は author が書くのではなくレジストリが証明します — 完全な信頼モデルは
+設計 RFC を参照してください。
+</Callout>

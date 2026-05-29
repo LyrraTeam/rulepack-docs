@@ -1,0 +1,62 @@
+---
+title: クイックスタート
+description: 数コマンドでゼロからパック公開まで。
+---
+
+Node ≥ 22 と GitHub アカウントが必要です。
+
+## 1. scope を取得する
+
+パックは `@scope/name` の下に置かれます。GitHub でサインインして、ハブで scope を
+取得してください — 1 アカウントにつき 1 scope、あとから改名できます。
+
+```bash title="terminal"
+npx rulepack login
+```
+
+ブラウザが開き、セッションを承認すると、CLI が `~/.rulepackrc` にトークンを保存します。
+
+## 2. パックを雛形生成する
+
+共有したいルールを持つプロジェクトで `init` を実行します。既存のエージェントファイルを
+検出し、パックが対象とするエージェントを尋ね、ルート直下に `rulepack.json` を書き出します。
+
+```bash title="terminal"
+npx rulepack init
+```
+
+```json title="rulepack.json"
+{
+  "name": "@ichi/nextjs-strict",
+  "version": "0.1.0",
+  "license": "MIT",
+  "agents": {
+    "claude": ["./CLAUDE.md"],
+    "cursor": ["./.cursor/rules/main.mdc"]
+  },
+  "files": ["rulepack.json", "CLAUDE.md", ".cursor/rules/**"]
+}
+```
+
+## 3. 公開する
+
+公開すると、宣言したファイルを tarball にまとめ、マニフェストを検証してアップロードします。
+バージョンは不変です — リリースごとに `version` を上げてください。
+
+```bash title="terminal"
+npx rulepack publish
+```
+
+## 4. どこへでもインストール
+
+```bash title="terminal"
+npx rulepack add @ichi/nextjs-strict
+```
+
+エージェントファイルが consumer 側のプロジェクトに展開され、依存はそのプロジェクトの
+`rulepack.json` に記録されます。
+
+<Callout title="CLI なし？ ハブを使う">
+パックの作成・編集・公開は、Web エディタだけで完結できます — ローカル CLI は不要です。
+サインイン後に `/packs/new` へどうぞ。
+</Callout>

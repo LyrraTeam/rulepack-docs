@@ -1,0 +1,51 @@
+---
+title: 概要
+description: rulepack とは何か、そして各要素がどう組み合わさるか。
+---
+
+rulepack は、AI コーディングエージェント用のルールファイルのためのレジストリと
+CLI です。ルールを一度書いてプロジェクト直下の 1 つの `rulepack.json` に記述すれば、
+あらゆるエージェント — Claude Code・Cursor・Cline・Windsurf・AGENTS.md — に配布できます。
+
+エージェント指示のための npm だと考えてください。**パック**は、エージェントが読む
+ルールファイル（`CLAUDE.md` や `.cursor/rules/main.mdc` など）をまとめたもので、
+不変の semver でバージョン管理され、1 コマンドでどのプロジェクトにもインストールできます。
+
+## プロジェクトの形
+
+`rulepack.json` はリポジトリのルート、`package.json` のすぐ隣に置きます — 他の
+あらゆるエコシステムがマニフェストを置くのと同じ場所です。これは意図的で、
+すぐに馴染めるようにしてあります。
+
+```text title="your-project/"
+.
+├── rulepack.json          # マニフェスト — ルート直下
+├── package.json
+├── AGENTS.md
+├── CLAUDE.md
+└── .cursor/
+    └── rules/
+        └── main.mdc
+```
+
+<Callout title="ルート配置が規約です">
+`rulepack.json` はプロジェクト直下に置いてください。npm が `package.json` を探すのと
+同じく、ツールはカレントディレクトリから解決します。`rulepack publish` も
+`rulepack add` もルート直下のマニフェストを前提とします。
+</Callout>
+
+## 数秒でインストール
+
+```bash title="terminal"
+npx rulepack add nextjs-strict
+```
+
+これでレジストリからパックを解決し、SHA-256 を検証して、エージェントファイルを
+プロジェクトに書き込みます。結果はあなたの `rulepack.json` に記録されます。
+
+## 次のステップ
+
+- [クイックスタート](/docs/quickstart) — 5 分で最初のパックを公開。
+- [rulepack.json](/docs/rulepack-json) — マニフェストの全フィールド解説。
+- [CLI コマンド](/docs/cli) — `init`・`add`・`publish`・`login`・`search`。
+- [公開とインストール](/docs/publishing) — author → registry → consumer のライフサイクル。
