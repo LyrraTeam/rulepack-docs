@@ -16,21 +16,33 @@ Docs are organized into one folder per language (fumadocs `parser: "dir"`), so
 adding a new language is just adding a folder:
 
 ```text
+i18n.json               # language config: default + available languages
 en/                     # English (default language)
+  meta.json             # sidebar order/title for this language
   index.mdx             # → /docs
   quickstart.mdx        # → /docs/quickstart
   rulepack-json.mdx     # → /docs/rulepack-json
   cli.mdx               # → /docs/cli
   publishing.mdx        # → /docs/publishing
 ja/                     # 日本語 — same filenames as en/
+  meta.json
   index.mdx
   …
 ```
 
 The site shows the folder matching the visitor's language; anything missing in a
-language falls back to `en/`. To add a language, create a new folder (e.g.
-`fr/`) with the same filenames and translate — then wire the locale into the web
-app's `lib/i18n.ts`.
+language falls back to the `defaultLanguage`.
+
+- **`i18n.json`** — declares `defaultLanguage`, the `languages` list, and their
+  `displayNames`. The web app reads this, so registering a language is a config
+  edit here, not a code change.
+- **`<lang>/meta.json`** — the per-language page-linking file: `pages` sets the
+  sidebar order (and supports `"---Section---"` separators and `"..."` for the
+  rest), `title` names the section. Keep the page list mirrored across languages.
+
+To add a language: add it to `i18n.json`, create a `<lang>/` folder with the
+same filenames + a `meta.json`, and translate. (UI chrome strings like "Search"
+live in the web app's `lib/i18n.ts`; untranslated chrome falls back to English.)
 
 Pages use [fumadocs](https://fumadocs.dev) frontmatter:
 

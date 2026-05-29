@@ -1,0 +1,8 @@
+{
+  "defaultLanguage": "en",
+  "languages": ["en", "ja"],
+  "displayNames": {
+    "en": "English",
+    "ja": "日本語"
+  }
+}
