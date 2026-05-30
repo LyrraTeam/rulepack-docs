@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🐛 Bug in the app, CLI, or registry
+    url: https://rulepack.lyrra.net/docs/legal/acceptable-use
+    about: This repo is documentation only. For app/CLI/registry issues or security reports, email contact@rulepack.lyrra.net.
+  - name: 🔒 Security report
+    url: https://rulepack.lyrra.net/docs/legal/acceptable-use
+    about: Please report vulnerabilities privately to contact@rulepack.lyrra.net rather than opening a public issue.

@@ -1,4 +1,12 @@
 {
   "title": "ドキュメント",
-  "pages": ["index", "quickstart", "rulepack-json", "cli", "publishing"]
+  "pages": [
+    "index",
+    "quickstart",
+    "rulepack-json",
+    "cli",
+    "publishing",
+    "---規約・ポリシー---",
+    "legal"
+  ]
 }

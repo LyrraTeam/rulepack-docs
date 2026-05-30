@@ -57,6 +57,11 @@ A `<Callout>` component is available in MDX (no import needed).
 
 ## Contributing
 
+See **[CONTRIBUTING.md](./CONTRIBUTING.md)** for the full guide, and our
+**[Code of Conduct](https://rulepack.lyrra.net/docs/legal/code-of-conduct)**.
+Issues use templates (Documentation fix / Suggestion) — just open a new issue
+and pick one. In short:
+
 1. Edit the matching file under the language folder (`en/…`, `ja/…`). Keep one
    topic per file and match the existing frontmatter. Translations should mirror
    the English filenames so they line up.

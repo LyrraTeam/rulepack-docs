@@ -47,8 +47,9 @@ Please:
    - "version": "0.1.0"
    - "description": one line on what these rules enforce
    - "agents": a map from each agent to its rule file(s) — only include
-     agents whose files actually exist. Keys: claude, cursor, cline,
-     windsurf, agents_md.
+     agents whose files actually exist. Keys: claude, cursor, agents_md,
+     cline, windsurf, gemini, copilot, roo, kilocode, aider. (agents_md /
+     AGENTS.md is read by 20+ tools, so it covers most agents.)
 3. Show me the file and explain each field in plain language.
 
 Reference: https://rulepack.lyrra.net/rulepack.json
@@ -108,6 +109,26 @@ should receive. The supported agents today:
 | `agents_md` | AGENTS.md | `./AGENTS.md` |
 | `cline` | Cline | `./.clinerules` |
 | `windsurf` | Windsurf | `./.windsurfrules` |
+| `gemini` | Gemini CLI | `./GEMINI.md` |
+| `copilot` | GitHub Copilot | `./.github/copilot-instructions.md` |
+| `roo` | Roo Code | `./.roo/rules/main.md` |
+| `kilocode` | Kilo Code | `./.kilocode/rules/main.md` |
+| `aider` | Aider | `./CONVENTIONS.md` |
+
+<Callout title="AGENTS.md is the universal target">
+`AGENTS.md` is read by 20+ tools — Codex, Jules, Factory, Zed, Warp, goose,
+opencode, Devin, Junie, and more — so `agents_md` usually covers the long tail
+on its own. Add a tool-specific key only when that tool reads its own file
+(e.g. `gemini` → `GEMINI.md`, `copilot` → `.github/copilot-instructions.md`).
+</Callout>
+
+## Ship a LICENSE file
+
+The `license` field is the SPDX id (`MIT`, `Apache-2.0`, …). The convention —
+like npm — is to also ship a matching `LICENSE` file and list it in `files`.
+The hub then surfaces the license as a badge and a tab, so people can read the
+terms before installing. `rulepack init` writes an MIT `LICENSE` for you when
+you pick MIT.
 
 ## Author vs consumer
 

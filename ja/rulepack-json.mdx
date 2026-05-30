@@ -48,7 +48,9 @@ AI コーディングエージェント用ルールファイル（CLAUDE.md / .c
    - "version": "0.1.0"
    - "description": これらのルールが何を強制するかを 1 行で
    - "agents": 各エージェントとそのルールファイルの対応表。実際にファイルが
-     存在するエージェントだけ含めて。キー: claude, cursor, cline, windsurf, agents_md
+     存在するエージェントだけ含めて。キー: claude, cursor, agents_md, cline,
+     windsurf, gemini, copilot, roo, kilocode, aider（agents_md / AGENTS.md は
+     20 以上のツールが読むので大半をカバー）
 3. 作成したファイルを見せて、各フィールドをやさしい言葉で説明して。
 
 参考: https://rulepack.lyrra.net/rulepack.json
@@ -108,6 +110,24 @@ AI コーディングエージェント用ルールファイル（CLAUDE.md / .c
 | `agents_md` | AGENTS.md | `./AGENTS.md` |
 | `cline` | Cline | `./.clinerules` |
 | `windsurf` | Windsurf | `./.windsurfrules` |
+| `gemini` | Gemini CLI | `./GEMINI.md` |
+| `copilot` | GitHub Copilot | `./.github/copilot-instructions.md` |
+| `roo` | Roo Code | `./.roo/rules/main.md` |
+| `kilocode` | Kilo Code | `./.kilocode/rules/main.md` |
+| `aider` | Aider | `./CONVENTIONS.md` |
+
+<Callout title="AGENTS.md が共通ターゲット">
+`AGENTS.md` は 20 以上のツール（Codex・Jules・Factory・Zed・Warp・goose・opencode・
+Devin・Junie ほか）が読むため、`agents_md` だけでロングテールをだいたい網羅できます。
+固有ファイルを読むツールのときだけ専用キーを足してください（例: `gemini` → `GEMINI.md`、
+`copilot` → `.github/copilot-instructions.md`）。
+</Callout>
+
+## LICENSE ファイルを同梱する
+
+`license` フィールドは SPDX 識別子（`MIT`・`Apache-2.0` ほか）です。npm と同様に、対応する
+`LICENSE` ファイルも同梱して `files` に列挙するのが慣例です。ハブはライセンスをバッジとタブで
+表示するので、導入前に条件を確認できます。`rulepack init` で MIT を選ぶと MIT の `LICENSE` を生成します。
 
 ## author と consumer
 

@@ -1,0 +1,35 @@
+name: 📝 Documentation fix
+description: Report an error, typo, or something unclear in the docs.
+title: "docs: "
+labels: ["documentation"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Which page?
+      description: URL or file path (e.g. /docs/rulepack-json or en/rulepack-json.mdx).
+      placeholder: /docs/rulepack-json
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong?
+      description: What does it say now, and what's incorrect or confusing?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested fix (optional)
+      description: How should it read instead? A PR is welcome too.
+  - type: dropdown
+    id: lang
+    attributes:
+      label: Language
+      options:
+        - English (en)
+        - 日本語 (ja)
+        - Both / not sure
+    validations:
+      required: true

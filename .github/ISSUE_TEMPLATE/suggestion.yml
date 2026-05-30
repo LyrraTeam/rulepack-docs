@@ -1,0 +1,25 @@
+name: 💡 Suggestion
+description: Propose a new page, a restructure, or a docs/spec improvement.
+title: "suggestion: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to see?
+      description: Describe the new page, change, or improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it help?
+      description: What problem does it solve, or who does it help?
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Related agent / tool (optional)
+      description: If this is about supporting an agent (e.g. a new file convention), name it.
+      placeholder: e.g. Gemini CLI → GEMINI.md
