@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: 🪪 Name claim, verification, or dispute
+    url: https://rulepack.lyrra.net/support
+    about: Name claims, verification, and squatting/impersonation disputes go through an in-app support ticket (Name dispute channel), not a GitHub issue.
   - name: 🐛 Bug in the app, CLI, or registry
     url: https://rulepack.lyrra.net/docs/legal/acceptable-use
     about: This repo is documentation only. For app/CLI/registry issues or security reports, email contact@rulepack.lyrra.net.
