@@ -1,4 +1,5 @@
 {
   "title": "Legal & policies",
-  "pages": ["terms", "privacy", "acceptable-use", "safety-runs", "name-policy", "code-of-conduct"]
+  "pages": ["terms", "privacy", "acceptable-use", "disclaimer", "name-policy", "code-of-conduct"],
+  "defaultOpen": true
 }

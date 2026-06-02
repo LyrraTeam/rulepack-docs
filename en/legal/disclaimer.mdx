@@ -1,0 +1,56 @@
+---
+title: Disclaimer
+description: RulePack is provided "as is". What our checks do and don't guarantee, your responsibilities, and our ongoing commitment to improve them.
+---
+
+_Last updated: 2026-06-02_
+
+RulePack is a registry for AI-agent rule files. This page sets out the
+disclaimers that apply to the whole service — the packs you publish or install,
+and the safety tooling we run on them.
+
+## "As is", no warranty
+
+RulePack, its website, API, CLI, and **RulePack AI** safety tooling are provided
+**"as is" and "as available", without warranties of any kind**, express or
+implied — including fitness for a particular purpose, accuracy, or
+non-infringement. We don't guarantee the service will be uninterrupted,
+error-free, or secure.
+
+## Packs are third-party content
+
+Except for packs under the official `@rulepack` scope, rule files in the
+registry are published by their authors, not by RulePack. We don't endorse,
+vet, or take responsibility for third-party packs. **You are responsible for the
+rule files you install and the agents you run them in** — always review a pack
+from a source you don't already trust before giving it to an agent.
+
+## Safety Runs are not a guarantee
+
+**RulePack AI** — surfaced as **Safety Runs** and the **"Safety checked"** badge
+— scans rule files for prompt injection, credential exfiltration, unsafe or
+destructive commands, persistence, stealth instructions, and obfuscated
+payloads, combining precise static rules with a private model.
+
+No automated scan can catch every malicious or unsafe instruction. A passing
+scan and a "Safety checked" badge mean **no issues were found by the checks that
+ran at that time** — they are **not** a guarantee that a pack is safe, nor a
+substitute for your own review.
+
+## Our ongoing commitment
+
+Attack patterns evolve, so RulePack AI does too. We:
+
+- update the detection rules and model prompts as new attack patterns appear;
+- re-scan packs against newer checks over time;
+- record every scan so a result can be revisited.
+
+A badge reflects the checks available when that version was scanned; a later
+re-scan can change the result as our coverage improves.
+
+## Reporting
+
+Found something a scan missed, or a pack that violates our policies? Use the
+**Report** button on the pack page, or [contact support](/support). See also the
+[Acceptable Use Policy](/docs/legal/acceptable-use) and
+[Terms of Service](/docs/legal/terms).
