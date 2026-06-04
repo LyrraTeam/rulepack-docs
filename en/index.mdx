@@ -44,9 +44,24 @@ npx rulepack add nextjs
 That resolves the pack from the registry, verifies its SHA-256, and writes the
 memory files into your project — recording the result in your `rulepack.json`.
 
+## Public, private, or paid
+
+A pack's `visibility` decides who can read its files: **public** (anyone),
+**private** (only your scope), or **pay** (the metadata and README stay public,
+but the files unlock with a purchase). Public and private work today; paid
+checkout is coming soon. See [Visibility and access](/docs/rulepack-json#visibility-and-access).
+
+## Articles
+
+Beyond packs, rulepack hosts **articles** — AI operating know-how and
+playbooks. An article can be published free or with a paid, gated body, and can
+link the memory pack behind it so a reader goes from the write-up to
+`rulepack add` in one step. See [Articles](/docs/articles).
+
 ## Next steps
 
 - [Quickstart](/docs/quickstart) — publish your first pack in five minutes.
 - [rulepack.json](/docs/rulepack-json) — every field in the manifest, explained.
 - [CLI commands](/docs/cli) — `init`, `add`, `publish`, `login`, `search`.
 - [Publishing & installing](/docs/publishing) — the author → registry → consumer lifecycle.
+- [Articles](/docs/articles) — publish know-how, free or paid, and link it to packs.

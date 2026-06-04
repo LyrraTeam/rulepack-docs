@@ -44,9 +44,24 @@ npx rulepack add nextjs
 これでレジストリからパックを解決し、SHA-256 を検証して、memory ファイルを
 プロジェクトに書き込みます。結果はあなたの `rulepack.json` に記録されます。
 
+## 公開・非公開・有料
+
+パックの `visibility` が、ファイルを読める相手を決めます — **public**（誰でも）、
+**private**（自分の scope のみ）、**pay**（metadata と README は公開のまま、
+ファイルは購入で解放）。public と private は今すぐ利用可能、有料の決済は近日対応です。
+[公開範囲とアクセス](/docs/rulepack-json#公開範囲とアクセス) を参照。
+
+## 記事
+
+パックに加えて、rulepack には **記事** があります — AI の操縦術やプレイブックです。
+記事は無料、または有料のゲートされた本文付きで公開でき、裏側の memory パックを
+紐付ければ、読者は読み物から `rulepack add` までワンステップで進めます。
+[記事](/docs/articles) を参照。
+
 ## 次のステップ
 
 - [クイックスタート](/docs/quickstart) — 5 分で最初のパックを公開。
 - [rulepack.json](/docs/rulepack-json) — マニフェストの全フィールド解説。
 - [CLI コマンド](/docs/cli) — `init`・`add`・`publish`・`login`・`search`。
 - [公開とインストール](/docs/publishing) — author → registry → consumer のライフサイクル。
+- [記事](/docs/articles) — ノウハウを無料/有料で公開し、パックに紐付ける。
