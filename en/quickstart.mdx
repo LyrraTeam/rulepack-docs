@@ -3,29 +3,25 @@ title: Quickstart
 description: From zero to a published pack in a few commands.
 ---
 
-You'll need Node ≥ 22 and a GitHub account.
+You'll need Node ≥ 22. A GitHub account is only required when you publish.
 
-## 1. Claim a scope
+## 1. Scaffold a pack
 
-Packs live under `@scope/name`. Sign in with GitHub and claim your scope on the
-hub — one scope per account, renameable later.
-
-```bash title="terminal"
-npx rulepack login
-```
-
-This opens your browser, you approve the session, and the CLI stores a token at
-`~/.rulepackrc`.
-
-## 2. Scaffold a pack
-
-Run `init` in the project whose memories you want to share. It discovers
-existing agent files, asks which memories the pack should include, and writes a
-`rulepack.json` at the root.
+Run `init` in the project whose memories you want to share. It works without
+login, discovers existing agent files, asks which memories the pack should
+include, and writes a `rulepack.json` at the root.
 
 ```bash title="terminal"
 npx rulepack init
 ```
+
+`rulepack.json` can live in the repo like `package.json`: useful as a local AI
+memory manifest even before you publish anything.
+
+## 2. Review rulepack.json
+
+Make sure the generated `name` starts with the scope you plan to publish under
+and that every path in `memories` exists.
 
 ```json title="rulepack.json"
 {
@@ -42,7 +38,19 @@ npx rulepack init
 }
 ```
 
-## 3. Publish
+## 3. Sign in when you're ready to publish
+
+Publishing requires a GitHub session and a claimed scope. Packs live under
+`@scope/name`; one account owns one scope, renameable later.
+
+```bash title="terminal"
+npx rulepack login
+```
+
+This opens your browser, you approve the session, and the CLI stores a token at
+`~/.rulepackrc`.
+
+## 4. Publish
 
 Publishing packs the declared files into a tarball, validates the manifest, and
 uploads it. Versions are immutable — bump `version` for every release.
@@ -51,7 +59,7 @@ uploads it. Versions are immutable — bump `version` for every release.
 npx rulepack publish
 ```
 
-## 4. Install anywhere
+## 5. Install anywhere
 
 ```bash title="terminal"
 npx rulepack add @ichi/nextjs

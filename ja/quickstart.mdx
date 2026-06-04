@@ -3,27 +3,25 @@ title: クイックスタート
 description: 数コマンドでゼロからパック公開まで。
 ---
 
-Node ≥ 22 と GitHub アカウントが必要です。
+Node ≥ 22 が必要です。GitHub アカウントは publish するときだけ必要です。
 
-## 1. scope を取得する
+## 1. パックを雛形生成する
 
-パックは `@scope/name` の下に置かれます。GitHub でサインインして、ハブで scope を
-取得してください — 1 アカウントにつき 1 scope、あとから改名できます。
-
-```bash title="terminal"
-npx rulepack login
-```
-
-ブラウザが開き、セッションを承認すると、CLI が `~/.rulepackrc` にトークンを保存します。
-
-## 2. パックを雛形生成する
-
-共有したい memories を持つプロジェクトで `init` を実行します。既存のエージェントファイルを
-検出し、パックに含める memories を尋ね、ルート直下に `rulepack.json` を書き出します。
+共有したい memories を持つプロジェクトで `init` を実行します。ログイン不要で、既存の
+エージェントファイルを検出し、パックに含める memories を尋ね、ルート直下に
+`rulepack.json` を書き出します。
 
 ```bash title="terminal"
 npx rulepack init
 ```
+
+`rulepack.json` は `package.json` のように repo に置けます。公開前でも、ローカルの
+AI memory manifest として役に立ちます。
+
+## 2. rulepack.json を確認する
+
+生成された `name` が公開予定の scope で始まっていること、`memories` の path がすべて
+存在することを確認します。
 
 ```json title="rulepack.json"
 {
@@ -40,7 +38,18 @@ npx rulepack init
 }
 ```
 
-## 3. 公開する
+## 3. publish 前にサインインする
+
+publish には GitHub セッションと取得済み scope が必要です。パックは `@scope/name` の下に
+置かれます — 1 アカウントにつき 1 scope、あとから改名できます。
+
+```bash title="terminal"
+npx rulepack login
+```
+
+ブラウザが開き、セッションを承認すると、CLI が `~/.rulepackrc` にトークンを保存します。
+
+## 4. 公開する
 
 公開すると、宣言したファイルを tarball にまとめ、マニフェストを検証してアップロードします。
 バージョンは不変です — リリースごとに `version` を上げてください。
@@ -49,7 +58,7 @@ npx rulepack init
 npx rulepack publish
 ```
 
-## 4. どこへでもインストール
+## 5. どこへでもインストール
 
 ```bash title="terminal"
 npx rulepack add @ichi/nextjs
