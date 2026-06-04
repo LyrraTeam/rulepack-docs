@@ -169,6 +169,24 @@ project に導入した packs を記録するだけなら、`rulepack add` が c
 consumer manifest は最小で構いません。その project 自体が pack を公開しないなら、
 `name`、`version`、`memories` は不要です。
 
+## 公開範囲とアクセス
+
+`visibility` はレジストリ側のアクセスポリシーです。配布形式は 3 値で同一で、memory
+ファイルを読めて install できるのが誰か、だけが変わります。
+
+| 値 | ファイルを読めて install できるのは |
+| --- | --- |
+| `public` | 誰でも。一覧・検索に表示。 |
+| `private` | scope 所有者（あなた）のみ。一覧・検索・他ユーザーから不可視。 |
+| `pay` | metadata・README・関連記事は誰でも閲覧可。memory ファイルと tarball は購入者のみ。 |
+
+`visibility` を書き換えて新しい version を publish すればポリシーを変更できます。
+
+<Callout type="info">
+pay の購入は現在スタブです（課金せずにアクセスを付与）。購入 / install の流れをエンド
+ツーエンドで検証できます。実決済は後から差し込め、アクセス判定の仕組みは変わりません。
+</Callout>
+
 ## 次のステップ
 
 - [クイックスタート](/docs/quickstart) — login、init、publish、add を一通り試す。

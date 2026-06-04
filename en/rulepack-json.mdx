@@ -170,6 +170,25 @@ maintain a consumer-side manifest for you:
 That consumer manifest can be minimal. It does not need `name`, `version`, or
 `memories` unless the project is also publishing its own pack.
 
+## Visibility and access
+
+`visibility` is the registry's access policy. The pack format is identical for
+all three values — only who can read the memory files and install differs.
+
+| value | who can read the files & install |
+| --- | --- |
+| `public` | Anyone. Listed and searchable. |
+| `private` | Only you, the scope owner. Hidden from listings, search, and other users. |
+| `pay` | Anyone can see the metadata, README, and linked articles; the memory files and tarball require a purchase. |
+
+Change a pack's policy by editing `visibility` and publishing a new version.
+
+<Callout type="info">
+Pay purchases are a stub today — buying grants access without charging — so the
+buy / install flow is testable end to end. Real billing plugs in later without
+changing how access is decided.
+</Callout>
+
 ## Next steps
 
 - [Quickstart](/docs/quickstart) — run through login, init, publish, and add.
