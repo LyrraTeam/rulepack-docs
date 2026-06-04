@@ -1,34 +1,33 @@
 ---
-title: rulepack.json
-description: memories マニフェスト — 全フィールドとルート配置の規約。
+title: rulepack.json を作る
+description: repo の memory files から manifest を作る実践チュートリアル。
 ---
 
-`rulepack.json` は AI の記憶をパッキングするためのマニフェストです。パックの名前、
-ライセンス、公開範囲、配布する Markdown memories、そして consumer 側では依存する
-パックを宣言します。`package.json` と同じく、プロジェクト直下に置きます。
+このページは、実際のリポジトリで `rulepack.json` を作るための手順です。全フィールドの
+完全なリファレンスは [`/rulepack.json`](/rulepack.json) にあります。
 
-<Callout title="置き場所">
-つねにリポジトリ直下：`/rulepack.json`。CLI はカレントディレクトリから解決するので、
-どのコマンドもルート直下のマニフェストを前提とします。
-</Callout>
+## 1. まず agent がすでに読んでいるファイルを探す
 
-## package.json から来た人へ
+AI coding agent を導いている Markdown files を探します。
 
-`package.json` を書いたことがあれば、形はすぐ分かります。違うのは中身です。
-`package.json` はコードを、`rulepack.json` は AI エージェントが読む Markdown memories
-を配布します。
+```text title="your-project/"
+.
+├── AGENTS.md
+├── CLAUDE.md
+├── .cursor/
+│   └── rules/
+│       └── main.mdc
+├── docs/
+│   └── plan.md
+└── README.md
+```
 
-| `package.json` | `rulepack.json` |
-| --- | --- |
-| JavaScript / TS コードを配布 | Markdown memories を配布 |
-| `name`・`version` | `name`・`version` *(意味は同一)* |
-| `license` | `license` *(公開パックでは必須)* |
-| npm の公開範囲 / access | `visibility`: `public`・`private`・`pay` |
-| `dependencies` | `dependencies` *(他の rule packs)* |
-| 同梱する `files` | 同梱する `files` |
-| `main` / `exports` のエントリ | `memories` マップ：AI が読むファイル |
+rulepack では、これらを **memories** と呼びます。`CLAUDE.md` のように特定ツール向けの
+ものもあれば、`docs/plan.md` のように project context として使うものもあります。
 
-## JSON は書けない？ エージェントに書かせよう
+## 2. agent に manifest の下書きを作らせる
+
+Claude Code、Cursor、Codex などの coding agent にこれを貼り付けます。
 
 ```text title="エージェントに貼り付け"
 このプロジェクトに rulepack.json をセットアップして。
@@ -41,7 +40,7 @@ AI memory ファイル（AGENTS.md / CLAUDE.md / .cursor/rules / .clinerules /
 お願い:
 1. リポジトリを調べて、すでに存在する AI memory ファイルを全部挙げて。
 2. プロジェクト直下に rulepack.json を作成して、次を含めて:
-   - "name": "@<私のscope>/<短いパック名>"（scope は私に聞いて）
+   - "name": "@your-scope/short-pack-name"（scope は私に聞いて）
    - "version": "0.1.0"
    - "license": "MIT"（別のライセンスを選ぶなら聞いて）
    - "visibility": "public"（private / pay にするなら聞いて）
@@ -55,88 +54,123 @@ AI memory ファイル（AGENTS.md / CLAUDE.md / .cursor/rules / .clinerules /
 参考: https://rulepack.lyrra.net/rulepack.json
 ```
 
-## 例
+<Callout title="placeholder を具体的にしている理由">
+角括弧を含む scope/name placeholder は使わず、
+`@your-scope/short-pack-name` のように書きます。一部の docs / translation system は
+`<...>` を tag として扱うため、具体的な placeholder の方が安全に copy できます。
+</Callout>
+
+## 3. 生成された rulepack.json を確認する
+
+典型的な出力はこうなります。
 
 ```json title="rulepack.json"
 {
   "name": "@ichi/nextjs",
-  "version": "1.4.0",
-  "description": "Strict Next.js rules for Claude Code + Cursor",
+  "version": "0.1.0",
+  "description": "Next.js project memory for AI coding agents",
   "license": "MIT",
   "visibility": "public",
-  "keywords": ["nextjs", "typescript", "strict"],
+  "keywords": ["nextjs", "typescript"],
   "memories": {
     "agents": "AGENTS.md",
     "claude": "CLAUDE.md",
     "cursor": ".cursor/rules/main.mdc",
     "custom": {
-      "launch-plan": {
-        "path": "docs/launch-plan.md",
-        "description": "Launch and social media plan",
-        "readWhen": "when planning launch posts or growth strategy",
-        "priority": "normal",
-        "tags": ["marketing", "launch"]
+      "plan": {
+        "path": "docs/plan.md",
+        "description": "Project plan and implementation notes",
+        "readWhen": "before planning major implementation work",
+        "priority": "high",
+        "tags": ["planning", "handoff"]
       }
     }
   },
-  "files": ["rulepack.json", "README.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".cursor/rules/**", "docs/launch-plan.md"],
-  "dependencies": {
-    "@rulepack/typescript": "^0.1.0"
+  "files": [
+    "rulepack.json",
+    "README.md",
+    "LICENSE",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".cursor/rules/**",
+    "docs/plan.md"
+  ]
+}
+```
+
+公開前に、まずこの 3 点を確認します。
+
+- `memories` に書いた path がすべて存在する。
+- `files` に README、LICENSE、追加の補助ファイルが含まれている。
+- `visibility` が意図どおり: `public`、`private`、`pay`。
+
+## 4. standard memories と custom memories を分ける
+
+標準 memory keys は、各 tool が慣習的に読むファイルを指します。
+
+| キー | ファイル |
+| --- | --- |
+| `agents` | `AGENTS.md` |
+| `claude` | `CLAUDE.md` |
+| `cursor` | `.cursor/rules/main.mdc` |
+| `cline` | `.clinerules` |
+| `windsurf` | `.windsurfrules` |
+| `gemini` | `GEMINI.md` |
+| `copilot` | `.github/copilot-instructions.md` |
+
+`memories.custom` は、agent をまたいで役立つ project-level Markdown に使います。計画、
+引き継ぎ、設計メモ、launch docs、prompt、調査メモ、runbook などです。
+
+短く path だけでも書けます。
+
+```json
+{
+  "custom": {
+    "plan": "docs/plan.md"
   }
 }
 ```
 
-## フィールド
+metadata 付きにもできます。
 
-| フィールド | 型 | 説明 |
-| --- | --- | --- |
-| `name` \* | `string` | `@scope/name`。小文字・数字・内部のハイフン。scope は自分が所有するもの。 |
-| `version` \* | `string` | Semver。公開済みバージョンは不変 — リリースごとに上げる。 |
-| `license` \* | `string` | SPDX 識別子（`MIT`・`Apache-2.0`）または `UNLICENSED`。 |
-| `visibility` \* | `"public" \| "private" \| "pay"` | レジストリ側の access policy。配布形式は 3 種すべて同じ。 |
-| `description` | `string` | 1 行、280 文字以内。検索結果とパックページに表示。 |
-| `author` | `string` | 任意の author 表示名。 |
-| `homepage` | `string` | 任意の HTTP(S) URL。 |
-| `keywords` | `string[]` | 発見用タグ、最大 20 個。 |
-| `memories` \* | `object` | 標準 memory paths と任意の `custom` project memories。最低 1 つ必須。 |
-| `files` | `string[]` | 公開 tarball のグロブパターン。CLI は `rulepack.json` と宣言済み memory path を常に含める。 |
-| `dependencies` | `object` | consumer 側。`@scope/name` → semver 範囲。`rulepack add` が記録。 |
+```json
+{
+  "custom": {
+    "launch": {
+      "path": "docs/launch-plan.md",
+      "description": "Launch and social media plan",
+      "readWhen": "when planning launch posts",
+      "priority": "normal",
+      "tags": ["marketing", "launch"]
+    }
+  }
+}
+```
 
-<small>\* 公開パックでは必須。</small>
+## 5. 公開するか、local で使う
 
-## visibility
+他の project でも install できるようにするなら publish します。
 
-| 値 | アクセス |
-| --- | --- |
-| `public` | 誰でも metadata / memory files を閲覧でき、インストールできる。 |
-| `private` | 許可されたユーザー / team だけが閲覧・インストールできる。 |
-| `pay` | metadata と購入ページは公開可能。memory files と tarball は購入後のみ。 |
+```bash title="terminal"
+npx rulepack publish
+```
 
-## memories マップ
+project に導入した packs を記録するだけなら、`rulepack add` が consumer-side manifest を
+維持します。
 
-| キー | Memory | 既定パス |
-| --- | --- | --- |
-| `agents` | AGENTS.md | `AGENTS.md` |
-| `claude` | Claude Code | `CLAUDE.md` |
-| `cursor` | Cursor | `.cursor/rules/main.mdc` |
-| `cline` | Cline | `.clinerules` |
-| `windsurf` | Windsurf | `.windsurfrules` |
-| `gemini` | Gemini CLI | `GEMINI.md` |
-| `copilot` | GitHub Copilot | `.github/copilot-instructions.md` |
-
-`memories.custom` は、計画、引き継ぎ、設計メモ、launch docs、調査メモなど、特定の
-エージェントに限らない Markdown のための場所です。
-
-## author と consumer
-
-**author** マニフェストは `name`・`version`・`license`・`visibility`・最低 1 つの
-`memories` エントリが必須です。**consumer** マニフェストは `dependencies` だけでよく、
-それは `rulepack add` が維持します。
-
-```json title="rulepack.json"
+```json title="consumer rulepack.json"
 {
   "dependencies": {
-    "@ichi/nextjs": "^1.4.0"
+    "@rulepack/nextjs": "^0.1.0"
   }
 }
 ```
+
+consumer manifest は最小で構いません。その project 自体が pack を公開しないなら、
+`name`、`version`、`memories` は不要です。
+
+## 次のステップ
+
+- [クイックスタート](/docs/quickstart) — login、init、publish、add を一通り試す。
+- [CLI コマンド](/docs/cli) — `rulepack` で使えるコマンドを確認する。
+- [`/rulepack.json`](/rulepack.json) — manifest の完全リファレンス。
