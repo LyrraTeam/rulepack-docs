@@ -19,9 +19,9 @@ This opens your browser, you approve the session, and the CLI stores a token at
 
 ## 2. Scaffold a pack
 
-Run `init` in the project whose rules you want to share. It discovers existing
-agent files, asks which agents the pack targets, and writes a `rulepack.json` at
-the root.
+Run `init` in the project whose memories you want to share. It discovers
+existing agent files, asks which memories the pack should include, and writes a
+`rulepack.json` at the root.
 
 ```bash title="terminal"
 npx rulepack init
@@ -29,14 +29,16 @@ npx rulepack init
 
 ```json title="rulepack.json"
 {
-  "name": "@ichi/nextjs-strict",
+  "name": "@ichi/nextjs",
   "version": "0.1.0",
   "license": "MIT",
-  "agents": {
-    "claude": ["./CLAUDE.md"],
-    "cursor": ["./.cursor/rules/main.mdc"]
+  "visibility": "public",
+  "memories": {
+    "agents": "AGENTS.md",
+    "claude": "CLAUDE.md",
+    "cursor": ".cursor/rules/main.mdc"
   },
-  "files": ["rulepack.json", "CLAUDE.md", ".cursor/rules/**"]
+  "files": ["rulepack.json", "README.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".cursor/rules/**"]
 }
 ```
 
@@ -52,10 +54,10 @@ npx rulepack publish
 ## 4. Install anywhere
 
 ```bash title="terminal"
-npx rulepack add @ichi/nextjs-strict
+npx rulepack add @ichi/nextjs
 ```
 
-The agent files land in the consumer project and the dependency is recorded in
+The memory files land in the consumer project and the dependency is recorded in
 that project's `rulepack.json`.
 
 <Callout title="No CLI? Use the Hub">

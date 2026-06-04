@@ -9,18 +9,18 @@ description: init・add・publish・login・search・whoami・logout。
 ## add
 
 パックを現在のプロジェクトにインストールします。ダウンロードして SHA-256 を検証し、
-エージェントファイルを書き込みます。
+memory ファイルを書き込みます。
 
 ```bash title="terminal"
-rulepack add @ichi/nextjs-strict
-rulepack add nextjs-strict          # house パックは scope 無しの名前でインストール
+rulepack add @ichi/nextjs
+rulepack add nextjs                 # house パックは scope 無しの名前でインストール
 rulepack add @ichi/pack --force     # 既存ファイルを確認なしで上書き
 ```
 
 ## init
 
-カレントディレクトリに `rulepack.json` を雛形生成します。既存のエージェントファイルを
-検出し、対象とするエージェントを尋ねます。
+カレントディレクトリに `rulepack.json` を雛形生成します。既存の memory ファイルを
+検出し、含めるものを尋ねます。
 
 ```bash title="terminal"
 rulepack init

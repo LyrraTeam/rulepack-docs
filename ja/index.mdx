@@ -3,13 +3,13 @@ title: 概要
 description: rulepack とは何か、そして各要素がどう組み合わさるか。
 ---
 
-rulepack は、AI コーディングエージェント用のルールファイルのためのレジストリと
-CLI です。ルールを一度書いてプロジェクト直下の 1 つの `rulepack.json` に記述すれば、
+rulepack は、AI memory ファイルのためのレジストリと CLI です。memories を一度書いて
+プロジェクト直下の 1 つの `rulepack.json` に記述すれば、
 あらゆるエージェント — Claude Code・Cursor・Gemini CLI・GitHub Copilot・Cline・Windsurf、
 そして AGENTS.md を読む 20 以上のツール — に配布できます。
 
-エージェント指示のための npm だと考えてください。**パック**は、エージェントが読む
-ルールファイル（`CLAUDE.md` や `.cursor/rules/main.mdc` など）をまとめたもので、
+AI memory のための npm だと考えてください。**パック**は、エージェントが読む
+Markdown files（`AGENTS.md`、`CLAUDE.md`、`.cursor/rules/main.mdc` など）をまとめたもので、
 不変の semver でバージョン管理され、1 コマンドでどのプロジェクトにもインストールできます。
 
 ## プロジェクトの形
@@ -38,10 +38,10 @@ CLI です。ルールを一度書いてプロジェクト直下の 1 つの `ru
 ## 数秒でインストール
 
 ```bash title="terminal"
-npx rulepack add nextjs-strict
+npx rulepack add nextjs
 ```
 
-これでレジストリからパックを解決し、SHA-256 を検証して、エージェントファイルを
+これでレジストリからパックを解決し、SHA-256 を検証して、memory ファイルを
 プロジェクトに書き込みます。結果はあなたの `rulepack.json` に記録されます。
 
 ## 次のステップ

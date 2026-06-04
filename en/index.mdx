@@ -3,13 +3,13 @@ title: Overview
 description: What rulepack is and how the pieces fit together.
 ---
 
-rulepack is a registry and CLI for AI coding-agent rule files. You write your
-rules once, describe them in a single `rulepack.json` at your project root, and
+rulepack is a registry and CLI for AI memory files. You write your memories
+once, describe them in a single `rulepack.json` at your project root, and
 ship them to every agent — Claude Code, Cursor, Gemini CLI, GitHub Copilot,
 Cline, Windsurf, and the 20+ tools that read AGENTS.md.
 
-Think of it as npm for agent instructions. A **pack** bundles the rule files an
-agent reads (like `CLAUDE.md` or `.cursor/rules/main.mdc`), is versioned with
+Think of it as npm for AI memory. A **pack** bundles the Markdown files an
+agent reads (like `AGENTS.md`, `CLAUDE.md`, or `.cursor/rules/main.mdc`), is versioned with
 immutable semver, and installs into any project with one command.
 
 ## The shape of a project
@@ -38,11 +38,11 @@ what `rulepack publish` and `rulepack add` expect.
 ## Install in seconds
 
 ```bash title="terminal"
-npx rulepack add nextjs-strict
+npx rulepack add nextjs
 ```
 
 That resolves the pack from the registry, verifies its SHA-256, and writes the
-agent files into your project — recording the result in your `rulepack.json`.
+memory files into your project — recording the result in your `rulepack.json`.
 
 ## Next steps
 
