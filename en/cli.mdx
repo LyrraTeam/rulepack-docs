@@ -1,6 +1,6 @@
 ---
 title: CLI commands
-description: init, add, publish, login, search, whoami, logout.
+description: init, add, update, link, memory add, publish, login, search, whoami, logout.
 ---
 
 The `rulepack` CLI runs with no install via `npx rulepack <command>`, or install
@@ -18,6 +18,19 @@ rulepack add nextjs                 # house packs install by bare name
 rulepack add @ichi/pack --force     # overwrite existing files without prompting
 ```
 
+## update
+
+Update installed packs to newer registry versions. By default it picks the
+highest version that satisfies the declared dependency range; `--latest` goes to
+the newest available. Verifies the SHA-256 and confirms before overwriting local
+files (`--force` skips the per-file prompts).
+
+```bash title="terminal"
+rulepack update                     # all installed packs
+rulepack update @ichi/nextjs        # a single pack
+rulepack update --latest            # ignore declared ranges
+```
+
 ## init
 
 Scaffold a `rulepack.json` in the current directory. Discovers existing memory
@@ -25,6 +38,26 @@ files and asks which ones to include.
 
 ```bash title="terminal"
 rulepack init
+```
+
+## link
+
+Scan the current project for existing Markdown memory files and link them into
+`rulepack.json`. Conventional paths (`CLAUDE.md`, `AGENTS.md`, `.cursor/rules/…`)
+are classified as standard memories; any other Markdown is offered as a custom
+memory with an editable key.
+
+```bash title="terminal"
+rulepack link
+```
+
+## memory add
+
+Add a single memory to `rulepack.json` — a standard agent key, or a custom
+memory with optional description, readWhen, priority, and tags.
+
+```bash title="terminal"
+rulepack memory add
 ```
 
 ## publish

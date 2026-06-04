@@ -1,6 +1,6 @@
 ---
 title: CLI コマンド
-description: init・add・publish・login・search・whoami・logout。
+description: init・add・update・link・memory add・publish・login・search・whoami・logout。
 ---
 
 `rulepack` CLI は `npx rulepack <command>` でインストール不要で実行でき、グローバル
@@ -17,6 +17,18 @@ rulepack add nextjs                 # house パックは scope 無しの名前�
 rulepack add @ichi/pack --force     # 既存ファイルを確認なしで上書き
 ```
 
+## update
+
+インストール済みパックをレジストリの新しいバージョンに更新します。デフォルトは宣言された
+依存範囲内の最大バージョンを選び、`--latest` で範囲を無視して最新へ。SHA-256 を検証し、
+ローカルファイルを上書きする前に確認します（`--force` で確認をスキップ）。
+
+```bash title="terminal"
+rulepack update                     # 導入済み全パック
+rulepack update @ichi/nextjs        # 単一パック
+rulepack update --latest            # 宣言レンジを無視
+```
+
 ## init
 
 カレントディレクトリに `rulepack.json` を雛形生成します。既存の memory ファイルを
@@ -24,6 +36,25 @@ rulepack add @ichi/pack --force     # 既存ファイルを確認なしで上書
 
 ```bash title="terminal"
 rulepack init
+```
+
+## link
+
+カレントプロジェクト内の既存 Markdown memory ファイルを走査し、`rulepack.json` に
+紐付けます。慣例パス（`CLAUDE.md`・`AGENTS.md`・`.cursor/rules/…`）は標準 memory に
+自動分類し、その他の Markdown は編集可能なキー付きの custom memory として提示します。
+
+```bash title="terminal"
+rulepack link
+```
+
+## memory add
+
+`rulepack.json` に memory を 1 つ追加します ― 標準の agent キー、または custom memory
+（任意の description・readWhen・priority・tags 付き）。
+
+```bash title="terminal"
+rulepack memory add
 ```
 
 ## publish
