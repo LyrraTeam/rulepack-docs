@@ -10,18 +10,18 @@ run.
 ## add
 
 Install a pack into the current project. Downloads, verifies the SHA-256, and
-writes the agent files.
+writes the memory files.
 
 ```bash title="terminal"
-rulepack add @ichi/nextjs-strict
-rulepack add nextjs-strict          # house packs install by bare name
+rulepack add @ichi/nextjs
+rulepack add nextjs                 # house packs install by bare name
 rulepack add @ichi/pack --force     # overwrite existing files without prompting
 ```
 
 ## init
 
-Scaffold a `rulepack.json` in the current directory. Discovers existing agent
-files and asks which agents to target.
+Scaffold a `rulepack.json` in the current directory. Discovers existing memory
+files and asks which ones to include.
 
 ```bash title="terminal"
 rulepack init

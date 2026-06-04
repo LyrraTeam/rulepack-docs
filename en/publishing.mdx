@@ -8,9 +8,9 @@ it into any consumer project.
 
 ## Authoring
 
-A pack's source repo holds the agent rule files and a root `rulepack.json`. The
-`agents` map decides which files ship; `files` globs decide what else rides
-along (a README, shared snippets).
+A pack's source repo holds Markdown memories and a root `rulepack.json`. The
+`memories` map declares the files the pack must contain; `files` globs decide
+what else rides along (a README, LICENSE, shared snippets).
 
 You can author entirely from the CLI (`rulepack init`) or from the web editor —
 no local checkout required for the latter.
@@ -24,8 +24,8 @@ manifest against the schema, computes a SHA-256, and uploads. The scope in
 ```bash title="terminal"
 $ rulepack publish
 ✓ Packed 4 files (12.3 KiB)
-✓ Published @ichi/nextjs-strict@1.4.0
-→ npx rulepack add @ichi/nextjs-strict
+✓ Published @ichi/nextjs@1.4.0
+→ npx rulepack add @ichi/nextjs
 ```
 
 <Callout title="Immutable versions">
@@ -37,13 +37,13 @@ returns a 409 — bump `version` for every change. This guarantees a given
 ## Installing
 
 `rulepack add` resolves the latest version (or a requested one), downloads the
-tarball, verifies its SHA-256 against the registry header, and writes the agent
+tarball, verifies its SHA-256 against the registry header, and writes the memory
 files into the consumer project.
 
 ```bash title="terminal"
-$ rulepack add @ichi/nextjs-strict
-✓ Resolved @ichi/nextjs-strict@1.4.0
-✓ Wrote CLAUDE.md · .cursor/rules/main.mdc
+$ rulepack add @ichi/nextjs
+✓ Resolved @ichi/nextjs@1.4.0
+✓ Wrote AGENTS.md · CLAUDE.md · .cursor/rules/main.mdc
 ✓ Recorded in rulepack.json
 ```
 

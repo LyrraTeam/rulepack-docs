@@ -1,83 +1,102 @@
 ---
 title: rulepack.json
-description: The manifest — every field, with the root-placement convention.
+description: The memories manifest — every field, with the root-placement convention.
 ---
 
-`rulepack.json` is the manifest for a pack. It declares identity, the agent
-files to ship, and — on the consumer side — the packs a project depends on. It
-lives at the project root, like `package.json`.
+`rulepack.json` is the manifest for packaging AI memory. It declares identity,
+license, visibility, the Markdown memories to ship, and — on the consumer side —
+the packs a project depends on. It lives at the project root, like
+`package.json`.
 
 <Callout title="Where it lives">
 Always at the repository root: `/rulepack.json`. The CLI resolves it from the
-current working directory, so a root manifest is what every command expects —
-and it reads like the manifest of any other ecosystem.
+current working directory, so a root manifest is what every command expects.
 </Callout>
 
 ## Coming from package.json
 
-If you've ever written a `package.json`, you already know `rulepack.json`. Same
-shape — only the payload differs. `package.json` ships code; `rulepack.json`
-ships the AI agent rule files that code lives next to.
+If you've ever written a `package.json`, you already know the shape. The payload
+is different: `package.json` ships code; `rulepack.json` ships Markdown memories
+for AI agents.
 
 | `package.json` | `rulepack.json` |
 | --- | --- |
-| ships JavaScript / TS code | ships AI agent rule files |
+| ships JavaScript / TS code | ships Markdown memories |
 | `name`, `version` | `name`, `version` *(identical meaning)* |
+| `license` | `license` *(required for published packs)* |
+| npm access / package visibility | `visibility`: `public`, `private`, or `pay` |
 | `dependencies` | `dependencies` *(other rule packs)* |
 | `files` to include | `files` to include |
-| `main` / `exports` entry | `agents` map: which file each agent reads |
+| `main` / `exports` entry | `memories` map: files the agent should load |
 
 ## Don't write JSON? Let your agent write it
-
-`rulepack.json` is new enough that it isn't in most models' training data yet —
-but every coding agent knows `package.json` cold. Lean on that: paste this into
-Claude Code, Cursor, or any agent and it'll scaffold the manifest for your repo.
 
 ```text title="Paste into your agent"
 Set up rulepack.json for this project.
 
 rulepack.json is like package.json, but instead of shipping code it bundles
-this repo's AI coding-agent rule files (CLAUDE.md, .cursor/rules, AGENTS.md,
-.clinerules, .windsurfrules) into one reusable, versioned pack.
+this repo's AI memory files (AGENTS.md, CLAUDE.md, .cursor/rules, .clinerules,
+.windsurfrules, GEMINI.md, Copilot instructions, and custom Markdown docs)
+into one reusable, versioned pack.
 
 Please:
-1. Scan the repo and list every agent rule file that already exists.
+1. Scan the repo and list every existing AI memory file.
 2. Create rulepack.json at the project root with:
-   - "name": "@<my-scope>/<short-pack-name>"  (ask me for my scope)
+   - "name": "@<my-scope>/<short-pack-name>" (ask me for my scope)
    - "version": "0.1.0"
-   - "description": one line on what these rules enforce
-   - "agents": a map from each agent to its rule file(s) — only include
-     agents whose files actually exist. Keys: claude, cursor, agents_md,
-     cline, windsurf, gemini, copilot, roo, kilocode, aider. (agents_md /
-     AGENTS.md is read by 20+ tools, so it covers most agents.)
+   - "license": "MIT" unless I choose another license
+   - "visibility": "public" unless I choose private or pay
+   - "description": one line on what these memories help an agent do
+   - "memories": map existing files to standard keys: agents, claude, cursor,
+     cline, windsurf, gemini, copilot. Put other Markdown files under "custom"
+     with path and optional description/readWhen/tags.
+   - "files": include rulepack.json, LICENSE, README.md, and every memory path.
 3. Show me the file and explain each field in plain language.
 
 Reference: https://rulepack.lyrra.net/rulepack.json
 ```
 
 <Callout title="Point an agent straight at the spec">
-There's also a machine-readable primer at [`/llms.txt`](/llms.txt) — tell your
+There's also a machine-readable primer at [`/llms.txt`](/llms.txt). Tell your
 agent to read `https://rulepack.lyrra.net/llms.txt` and it learns the format
-(and the `package.json` analogy) directly, no copy-paste required.
+directly.
 </Callout>
 
 ## Example
 
 ```json title="rulepack.json"
 {
-  "name": "@ichi/nextjs-strict",
+  "name": "@ichi/nextjs",
   "version": "1.4.0",
   "description": "Strict Next.js rules for Claude Code + Cursor",
   "license": "MIT",
+  "visibility": "public",
   "keywords": ["nextjs", "typescript", "strict"],
-  "agents": {
-    "claude": ["./CLAUDE.md"],
-    "cursor": ["./.cursor/rules/main.mdc"],
-    "agents_md": ["./AGENTS.md"]
+  "memories": {
+    "agents": "AGENTS.md",
+    "claude": "CLAUDE.md",
+    "cursor": ".cursor/rules/main.mdc",
+    "custom": {
+      "launch-plan": {
+        "path": "docs/launch-plan.md",
+        "description": "Launch and social media plan",
+        "readWhen": "when planning launch posts or growth strategy",
+        "priority": "normal",
+        "tags": ["marketing", "launch"]
+      }
+    }
   },
-  "files": ["rulepack.json", "CLAUDE.md", ".cursor/rules/**", "AGENTS.md"],
+  "files": [
+    "rulepack.json",
+    "README.md",
+    "LICENSE",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".cursor/rules/**",
+    "docs/launch-plan.md"
+  ],
   "dependencies": {
-    "@rulepack/base": "^2.0.0"
+    "@rulepack/typescript": "^0.1.0"
   }
 }
 ```
@@ -88,69 +107,85 @@ agent to read `https://rulepack.lyrra.net/llms.txt` and it learns the format
 | --- | --- | --- |
 | `name` \* | `string` | `@scope/name`. Lowercase letters, digits, internal hyphens. The scope must be one you own. |
 | `version` \* | `string` | Semver. Each published version is immutable — bump it for every release. |
+| `license` \* | `string` | SPDX identifier (`MIT`, `Apache-2.0`) or `UNLICENSED`. Ship a matching `LICENSE` file when possible. |
+| `visibility` \* | `"public" \| "private" \| "pay"` | Registry access policy. The pack format is identical for all three. |
 | `description` | `string` | One line, ≤ 280 chars. Shown in search and on the pack page. |
-| `license` | `string` | SPDX identifier (`MIT`, `Apache-2.0`) or `UNLICENSED`. |
+| `author` | `string` | Optional human-readable author name. |
+| `homepage` | `string` | Optional HTTP(S) URL for the source, docs, or project page. |
 | `keywords` | `string[]` | Up to 20 tags for discovery. |
-| `agents` \* | `object` | Maps each target agent to the rule files it reads. At least one agent with one path is required. |
-| `files` | `string[]` | Glob patterns for the published tarball. `rulepack.json` and every declared agent path are always included. |
+| `memories` \* | `object` | Standard memory paths plus optional `custom` project memories. At least one memory is required. |
+| `files` | `string[]` | Glob patterns for the published tarball. `rulepack.json` and every declared memory path are always included by the CLI. |
 | `dependencies` | `object` | Consumer-side. `@scope/name` → semver range. Written by `rulepack add` when a `rulepack.json` exists. |
 
-<small>\* required.</small>
+<small>\* required for published packs.</small>
 
-## The agents map
+## Visibility
 
-Each key is an agent identifier; each value lists the rule files that agent
-should receive. The supported agents today:
+| Value | Access |
+| --- | --- |
+| `public` | Anyone can view metadata, memory files, and install the pack. |
+| `private` | Only authorized users or teams can view and install the pack. |
+| `pay` | Metadata and the purchase page can be public; memory files and tarball access require purchase. |
 
-| Key | Agent | Default path |
+Visibility is an access policy enforced by the registry. It does not change the
+pack format: all packs still publish `rulepack.json` plus the Markdown files
+declared in `memories`.
+
+## The memories map
+
+| Key | Memory | Default path |
 | --- | --- | --- |
-| `claude` | Claude Code | `./CLAUDE.md` |
-| `cursor` | Cursor | `./.cursor/rules/main.mdc` |
-| `agents_md` | AGENTS.md | `./AGENTS.md` |
-| `cline` | Cline | `./.clinerules` |
-| `windsurf` | Windsurf | `./.windsurfrules` |
-| `gemini` | Gemini CLI | `./GEMINI.md` |
-| `copilot` | GitHub Copilot | `./.github/copilot-instructions.md` |
-| `roo` | Roo Code | `./.roo/rules/main.md` |
-| `kilocode` | Kilo Code | `./.kilocode/rules/main.md` |
-| `aider` | Aider | `./CONVENTIONS.md` |
+| `agents` | AGENTS.md | `AGENTS.md` |
+| `claude` | Claude Code | `CLAUDE.md` |
+| `cursor` | Cursor | `.cursor/rules/main.mdc` |
+| `cline` | Cline | `.clinerules` |
+| `windsurf` | Windsurf | `.windsurfrules` |
+| `gemini` | Gemini CLI | `GEMINI.md` |
+| `copilot` | GitHub Copilot | `.github/copilot-instructions.md` |
 
 <Callout title="AGENTS.md is the universal target">
-`AGENTS.md` is read by 20+ tools — Codex, Jules, Factory, Zed, Warp, goose,
-opencode, Devin, Junie, and more — so `agents_md` usually covers the long tail
-on its own. Add a tool-specific key only when that tool reads its own file
-(e.g. `gemini` → `GEMINI.md`, `copilot` → `.github/copilot-instructions.md`).
+`AGENTS.md` is read by many tools, so `memories.agents` usually covers the long
+tail. Add a tool-specific key only when that tool reads its own file.
 </Callout>
 
-## Ship a LICENSE file
+## Custom memories
 
-The `license` field is the SPDX id (`MIT`, `Apache-2.0`, …). The convention —
-like npm — is to also ship a matching `LICENSE` file and list it in `files`.
-The hub then surfaces the license as a badge and a tab, so people can read the
-terms before installing. `rulepack init` writes an MIT `LICENSE` for you when
-you pick MIT.
+Use `memories.custom` for Markdown that is not tied to one agent: plans,
+handoffs, architecture notes, launch docs, prompts, or research summaries.
+
+```json
+{
+  "memories": {
+    "agents": "AGENTS.md",
+    "custom": {
+      "plan": "docs/plan.md",
+      "launch": {
+        "path": "docs/launch-plan.md",
+        "description": "Launch and social media plan",
+        "readWhen": "when planning launch posts or growth strategy",
+        "priority": "normal",
+        "tags": ["marketing", "launch"]
+      }
+    }
+  }
+}
+```
 
 ## Author vs consumer
 
-The same file format serves two roles. An **author** manifest (in the pack's
-source repo) requires `name`, `version`, and at least one `agents` entry. A
-**consumer** manifest (in a project that installs packs) only needs
-`dependencies` — `rulepack add` maintains it for you.
-
-When you run `rulepack add @scope/pack` in a project that already has a
-`rulepack.json`, the installed pack is recorded under `dependencies` with a
-caret range, just like npm:
+An **author** manifest requires `name`, `version`, `license`, `visibility`, and
+at least one `memories` entry. A **consumer** manifest only needs
+`dependencies`; `rulepack add` maintains it for you.
 
 ```json title="rulepack.json"
 {
   "dependencies": {
-    "@ichi/nextjs-strict": "^1.4.0"
+    "@ichi/nextjs": "^1.4.0"
   }
 }
 ```
 
 <Callout title="Versioning & provenance">
-Published versions are immutable and content-addressed by SHA-256. Provenance
-(publisher, timestamp) is attested by the registry, not written by the author —
-see the design RFC for the full trust model.
+Published versions are immutable and content-addressed by SHA-256. Provenance is
+attested by the registry, not written by the author.
 </Callout>

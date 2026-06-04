@@ -8,9 +8,9 @@ description: author → registry → consumer のライフサイクル。
 
 ## 作成（Authoring）
 
-パックのソースリポジトリは、エージェント用ルールファイルとルート直下の `rulepack.json` を
-保持します。`agents` マップが配布するファイルを決め、`files` グロブがそれ以外に
-同梱するもの（README や共有スニペット）を決めます。
+パックのソースリポジトリは、Markdown memories とルート直下の `rulepack.json` を
+保持します。`memories` マップが必ず含めるファイルを決め、`files` グロブがそれ以外に
+同梱するもの（README、LICENSE、共有スニペット）を決めます。
 
 作成は CLI（`rulepack init`）からでも、Web エディタからでも行えます — 後者はローカルの
 チェックアウト不要です。
@@ -24,8 +24,8 @@ description: author → registry → consumer のライフサイクル。
 ```bash title="terminal"
 $ rulepack publish
 ✓ Packed 4 files (12.3 KiB)
-✓ Published @ichi/nextjs-strict@1.4.0
-→ npx rulepack add @ichi/nextjs-strict
+✓ Published @ichi/nextjs@1.4.0
+→ npx rulepack add @ichi/nextjs
 ```
 
 <Callout title="バージョンは不変">
@@ -37,12 +37,12 @@ $ rulepack publish
 ## インストール（Installing）
 
 `rulepack add` は最新版（または指定版）を解決し、tarball をダウンロードして、レジストリの
-ヘッダに対して SHA-256 を検証し、エージェントファイルを consumer プロジェクトに書き込みます。
+ヘッダに対して SHA-256 を検証し、memory ファイルを consumer プロジェクトに書き込みます。
 
 ```bash title="terminal"
-$ rulepack add @ichi/nextjs-strict
-✓ Resolved @ichi/nextjs-strict@1.4.0
-✓ Wrote CLAUDE.md · .cursor/rules/main.mdc
+$ rulepack add @ichi/nextjs
+✓ Resolved @ichi/nextjs@1.4.0
+✓ Wrote AGENTS.md · CLAUDE.md · .cursor/rules/main.mdc
 ✓ Recorded in rulepack.json
 ```
 
