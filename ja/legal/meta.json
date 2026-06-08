@@ -1,5 +1,14 @@
 {
   "title": "規約・ポリシー",
-  "pages": ["terms", "privacy", "acceptable-use", "disclaimer", "name-policy", "code-of-conduct"],
+  "pages": [
+    "terms",
+    "privacy",
+    "[特商法表記](/legal/commercial-transactions)",
+    "[返金・キャンセルポリシー](/legal/refund-policy)",
+    "acceptable-use",
+    "disclaimer",
+    "name-policy",
+    "code-of-conduct"
+  ],
   "defaultOpen": true
 }

@@ -1,5 +1,14 @@
 {
   "title": "Legal & policies",
-  "pages": ["terms", "privacy", "acceptable-use", "disclaimer", "name-policy", "code-of-conduct"],
+  "pages": [
+    "terms",
+    "privacy",
+    "[Commerce disclosure](/legal/commercial-transactions)",
+    "[Refund Policy](/legal/refund-policy)",
+    "acceptable-use",
+    "disclaimer",
+    "name-policy",
+    "code-of-conduct"
+  ],
   "defaultOpen": true
 }
